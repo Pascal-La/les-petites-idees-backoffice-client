@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Table } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const IdeaList = () => {
   const [ideas, setIdeas] = useState([]);
@@ -94,7 +95,9 @@ const IdeaList = () => {
             <option value="sortedStarFalse">Stars en derniers</option>
           </Form.Select>
         </div>
-        <Button>Ajouter une idée</Button>
+        <Button>
+          <Link to="/newIdea">Ajouter une idée</Link>
+        </Button>
       </div>
       <Table responsive hover className="mt-4 text-center">
         <thead>
@@ -114,7 +117,7 @@ const IdeaList = () => {
           <tbody key={index}>
             <tr>
               <td>{index + 1}</td>
-              <img src={idea.logo} alt="" height={80} width={80} />
+              <img src={idea.logo} alt={idea.name} height={80} width={80} />
               <td>{idea.name}</td>
               <td>{idea.webSite}</td>
               <td>{idea.description}</td>
@@ -123,7 +126,9 @@ const IdeaList = () => {
               <td>{idea.language}</td>
               <td>{idea.star && "*"}</td>
               <td>
-                <Button variant="outline-warning">Modifier</Button>
+                <Button variant="outline-warning">
+                  <Link to={`/update/${idea._id}`}>Modifier</Link>
+                </Button>
               </td>
             </tr>
           </tbody>
