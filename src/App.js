@@ -1,12 +1,12 @@
 import "./App.scss";
 import Header from "./components/Header";
-import ToolList from "./components/ToolList";
+import IdeaList from "./components/IdeaList";
 
 const App = () => {
   return (
     <>
       <Header />
-      <ToolList />
+      <IdeaList />
     </>
   );
 };
