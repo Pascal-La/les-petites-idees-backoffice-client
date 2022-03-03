@@ -6,10 +6,10 @@
 body {
   background: linear-gradient(
     145deg,
-    #f2d347e1,
-    #97d48fe1,
-    #4749f4e1,
-    #04047ce1
+    #f2d34799,
+    #97d48f99,
+    #4749f499,
+    #04047c99
   );
   min-height: 100vh;
 
@@ -18,5 +18,9 @@ body {
   a {
     text-decoration: none;
     color: #fff;
+
+    &:hover {
+      color: #ccc;
+    }
   }
 }

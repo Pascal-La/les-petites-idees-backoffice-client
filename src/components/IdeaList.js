@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Form, Table } from "react-bootstrap";
+import { Badge, Button, Container, Form, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const IdeaList = () => {
@@ -87,7 +87,7 @@ const IdeaList = () => {
       <div className="d-flex pt-5 mt-5 justify-content-center">
         <div>
           <Form.Select onChange={(e) => handleChange(e)}>
-            <option value="default">Trier...</option>
+            <option value="default">Trier par...</option>
             {/* <option value="default">Défault</option> */}
             <option value="sortedNameAsc">Nom de A à Z</option>
             <option value="sortedNameDesc">Nom de Z à A</option>
@@ -95,45 +95,63 @@ const IdeaList = () => {
             <option value="sortedStarFalse">Stars en derniers</option>
           </Form.Select>
         </div>
-        <Button>
-          <Link to="/newIdea">Ajouter une idée</Link>
-        </Button>
+        <Link to="/newIdea">
+          <Button>Ajouter une idée</Button>
+        </Link>
       </div>
-      <Table responsive hover className="mt-4 text-center">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Logo</th>
-            <th>Nom</th>
-            <th>Site web</th>
-            <th>Description</th>
-            <th>Tags</th>
-            <th>Accès</th>
-            <th>Langue</th>
-            <th>Mes stars</th>
-          </tr>
-        </thead>
-        {ideas.map((idea, index) => (
-          <tbody key={index}>
+      <Container>
+        <Table responsive size="sm" hover className="mt-4 text-center">
+          <thead>
             <tr>
-              <td>{index + 1}</td>
-              <img src={idea.logo} alt={idea.name} height={80} width={80} />
-              <td>{idea.name}</td>
-              <td>{idea.webSite}</td>
-              <td>{idea.description}</td>
-              <td>{idea.tags}</td>
-              <td>{idea.access}</td>
-              <td>{idea.language}</td>
-              <td>{idea.star && "*"}</td>
-              <td>
-                <Button variant="outline-warning">
-                  <Link to={`/update/${idea._id}`}>Modifier</Link>
-                </Button>
-              </td>
+              <th>#</th>
+              <th>Logo</th>
+              <th>Nom</th>
+              <th>Site web</th>
+              <th>Description</th>
+              <th>Tags</th>
+              <th>Accès</th>
+              <th>Langue</th>
+              <th>&#9733;</th>
             </tr>
-          </tbody>
-        ))}
-      </Table>
+          </thead>
+          {ideas.map((idea, index) => (
+            <tbody key={index}>
+              <tr>
+                <td>{index + 1}</td>
+                <img src={idea.logo} alt={idea.name} height={80} width={80} />
+                <td>{idea.name}</td>
+                <td>{idea.webSite}</td>
+                <td>{idea.description}</td>
+                <td>
+                  {idea.tags.map((tag) => (
+                    <Badge bg="info">{tag.toUpperCase()}</Badge>
+                  ))}
+                </td>
+                <td>
+                  {idea.access.map((access) => (
+                    <Badge bg="success">{access.toUpperCase()}</Badge>
+                  ))}
+                </td>
+                <td>
+                  {idea.language.map((language) => (
+                    <Badge>{language.toUpperCase()}</Badge>
+                  ))}
+                </td>
+                {idea.star ? (
+                  <td className="text-warning">&#9733;</td>
+                ) : (
+                  <td></td>
+                )}
+                <td>
+                  <Link to={`/update/${idea._id}`} className="text-black">
+                    <Button variant="warning">&#9998;</Button>
+                  </Link>
+                </td>
+              </tr>
+            </tbody>
+          ))}
+        </Table>
+      </Container>
     </>
   );
 };
