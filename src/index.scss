@@ -1,6 +1,22 @@
 * {
   margin: 0;
   padding: 0;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+  &::-webkit-scrollbar-track {
+    background: #c6c6c6;
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ffd65b;
+    border-radius: 20px;
+    display: none;
+  }
+
+  overflow-x: hidden;
 }
 
 body {
