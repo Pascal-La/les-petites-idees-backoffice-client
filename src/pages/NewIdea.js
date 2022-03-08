@@ -1,6 +1,13 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { ButtonGroup, Col, Form, Row, ToggleButton } from "react-bootstrap";
+import {
+  Badge,
+  ButtonGroup,
+  Col,
+  Form,
+  Row,
+  ToggleButton,
+} from "react-bootstrap";
 import {
   ButtonInput,
   ButtonInputLabel,
@@ -25,80 +32,33 @@ const NewIdea = () => {
   const [loading, setLoading] = useState(false);
   const [fetchData, setFetchData] = useState([]);
 
-  // Custom Hook to select and remove
-  // tags, access & language badges on click
+  // onChange tags, access & languages
+  const [newBadge, setNewBadge] = useState({
+    tags: "",
+    access: "",
+    lang: "",
+  });
+
+  // Custom Hook to select and remove tags, access & language badges on click
   const [SelectBadge, RemoveBadge] = useBadge();
 
-  // Aim the file input clicking <img>
+  // Aim the file input by clicking <img>
   const logoRef = useRef();
   const handleLogoRef = () => {
     logoRef.current.click();
   };
 
-  //* ========================= TAG ========================
+  //* ====================== FETCH IDEAS ======================
 
-  const [tagList, setTagList] = useState([]);
-  let fetchTags = [];
-  // Pushing the tags into fetchTags from fetchData
-  fetchData.map((data) => fetchTags.push(...data.tags));
-  // Sanitize the array: removing doubles
-  const tagArray = Array.from(new Set(fetchTags));
-
-  const addNewTag = () => {};
-
-  //* ======================= ACCESS =======================
-
-  const [accessList, setAccessList] = useState([]);
-  let fetchAccess = [];
-  // Pushing the access into fetchAccess from fetchData
-  fetchData.map((data) => fetchAccess.push(...data.access));
-  // Sanitize the array: removing doubles
-  const accessArray = Array.from(new Set(fetchAccess));
-
-  const addNewAccess = () => {};
-
-  //* ====================== LANGUAGE ======================
-
-  const [langList, setLangList] = useState([]);
-  let fetchLang = [];
-  // Pushing the language into fetchLang from fetchData
-  fetchData.map((data) => fetchLang.push(...data.language));
-  // Sanitize the array: removing doubles
-  const langArray = Array.from(new Set(fetchLang));
-
-  const addNewLang = () => {};
-
-  //* ======================================================
-
-  const handleChange = (e) => {
-    setNewIdea({ ...newIdea, [e.target.name]: e.target.value });
-  };
-
-  const handlePicture = (e) => {
-    let reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    console.log(e.target.files[0]);
-    reader.onload = (e) => {
-      setNewIdea({ ...newIdea, logo: e.target.result });
-    };
-  };
-
-  //* ====================== RESET FORM ======================
-
-  const handleReset = () => {
-    setNewIdea({
-      logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
-      name: "",
-      webSite: "",
-      description: "",
-      tags: [],
-      access: [],
-      language: [],
-      star: false,
-    });
-    setTagList([]);
-    setAccessList([]);
-    setLangList([]);
+  const fetchIdea = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/ideas/getAllIdeas/"
+      );
+      setFetchData(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //* ====================== SUBMIT FORM ======================
@@ -125,22 +85,80 @@ const NewIdea = () => {
     }
   };
 
-  //* ====================== FETCH IDEAS ======================
+  //* ====================== RESET FORM ======================
 
-  const fetchIdea = async () => {
-    try {
-      const { data } = await axios.get(
-        "http://localhost:5000/api/ideas/getAllIdeas/"
-      );
-      setFetchData(data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleReset = () => {
+    setNewIdea({
+      logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+      name: "",
+      webSite: "",
+      description: "",
+      tags: [],
+      access: [],
+      language: [],
+      star: false,
+    });
+    setTagList([]);
+    setAccessList([]);
+    setLangList([]);
+  };
+
+  //* ======================== TAGS ========================
+
+  const [tagList, setTagList] = useState([]);
+  let fetchTags = []; // Pushing the tags from fetchData
+  fetchData.map((data) => fetchTags.push(...data.tags));
+  const tagArray = Array.from(new Set(fetchTags)); // Removing doubles
+
+  const addNewTag = () => {
+    tagList.push(newBadge.tags);
+    setNewBadge({ ...newBadge, tags: "" }); // Clearing the input
+  };
+
+  //* ======================= ACCESS =======================
+
+  const [accessList, setAccessList] = useState([]);
+  let fetchAccess = []; // Pushing the access from fetchData
+  fetchData.map((data) => fetchAccess.push(...data.access));
+  const accessArray = Array.from(new Set(fetchAccess)); // Removing doubles
+
+  const addNewAccess = () => {
+    accessList.push(newBadge.access);
+    setNewBadge({ ...newBadge, access: "" }); // Clearing the input
+  };
+
+  //* ====================== LANGUAGE ======================
+
+  const [langList, setLangList] = useState([]);
+  let fetchLang = []; // Pushing the language from fetchData
+  fetchData.map((data) => fetchLang.push(...data.language));
+  const langArray = Array.from(new Set(fetchLang)); // Removing doubles
+
+  const addNewLang = () => {
+    langList.push(newBadge.lang);
+    setNewBadge({ ...newBadge, lang: "" }); // Clearing the input
+  };
+
+  //* ======================================================
+
+  const handleChange = (e) => {
+    setNewIdea({ ...newIdea, [e.target.name]: e.target.value });
+  };
+
+  const handleNewBadge = (e) => {
+    setNewBadge({ ...newBadge, [e.target.name]: e.target.value });
+  };
+
+  const handlePicture = (e) => {
+    let reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    console.log(e.target.files[0]);
+    reader.onload = (e) => {
+      setNewIdea({ ...newIdea, logo: e.target.result });
+    };
   };
 
   useEffect(() => fetchIdea(), []);
-
-  console.log(tagList);
 
   return (
     <>
@@ -224,78 +242,173 @@ const NewIdea = () => {
               >
                 {/* //* ======================== TAGS ======================== */}
 
-                <div>
+                <div className="mb-3">
                   <ButtonInputLabel
-                    label="Tags"
+                    label="TAGS"
+                    name="tags"
+                    value={newBadge.tags}
+                    onChange={handleNewBadge}
                     onClick={addNewTag}
                     variant="outline-success"
+                    bg="success"
                   >
-                    {tagArray.map((tag, index) => (
-                      <ButtonInput
-                        key={index}
-                        tag={tag}
-                        value={tag}
-                        variant="outline-success"
-                        onClick={
-                          tagList.includes(tag)
-                            ? () => RemoveBadge(tag, tagList, setTagList)
-                            : () => SelectBadge(tag, tagList, setTagList)
-                        }
-                        checked={tagList.includes(tag)}
-                      />
-                    ))}
+                    <div>
+                      {tagArray.map(
+                        (tag, index) =>
+                          tag !== "" && (
+                            <ButtonInput
+                              key={index}
+                              tag={tag}
+                              value={tag}
+                              variant="outline-success"
+                              onClick={
+                                tagList.includes(tag)
+                                  ? () => RemoveBadge(tag, tagList, setTagList)
+                                  : () => SelectBadge(tag, tagList, setTagList)
+                              }
+                              checked={tagList.includes(tag)}
+                            />
+                          )
+                      )}
+                    </div>
+                    <div style={{ width: "100%", marginLeft: "1.5em" }}>
+                      {tagList.length > 0 && (
+                        <div className="my-2">
+                          <i>Tags sélectionnés:</i>
+                        </div>
+                      )}
+                      {tagList.map((tag, index) => (
+                        <Badge
+                          key={index}
+                          pill
+                          bg="success"
+                          onClick={() => RemoveBadge(tag, tagList, setTagList)}
+                          style={{ cursor: "pointer", margin: "2px" }}
+                        >
+                          {tag.toUpperCase()}
+                        </Badge>
+                      ))}
+                    </div>
                   </ButtonInputLabel>
                 </div>
 
                 {/* //* ======================= ACCESS ======================= */}
 
-                <div>
+                <div className="mb-3">
                   <ButtonInputLabel
-                    label="Accès"
+                    label="ACCES"
+                    name="access"
+                    value={newBadge.access}
+                    onChange={handleNewBadge}
                     onClick={addNewAccess}
                     variant="outline-primary"
+                    bg="primary"
                   >
-                    {accessArray.map((access, index) => (
-                      <ButtonInput
-                        key={index}
-                        tag={access}
-                        value={access}
-                        variant="outline-primary"
-                        onClick={
-                          accessList.includes(access)
-                            ? () =>
-                                RemoveBadge(access, accessList, setAccessList)
-                            : () =>
-                                SelectBadge(access, accessList, setAccessList)
-                        }
-                        checked={accessList.includes(access)}
-                      />
-                    ))}
+                    <div>
+                      {accessArray.map(
+                        (access, index) =>
+                          access !== "" && (
+                            <ButtonInput
+                              key={index}
+                              tag={access}
+                              value={access}
+                              variant="outline-primary"
+                              onClick={
+                                accessList.includes(access)
+                                  ? () =>
+                                      RemoveBadge(
+                                        access,
+                                        accessList,
+                                        setAccessList
+                                      )
+                                  : () =>
+                                      SelectBadge(
+                                        access,
+                                        accessList,
+                                        setAccessList
+                                      )
+                              }
+                              checked={accessList.includes(access)}
+                            />
+                          )
+                      )}
+                    </div>
+                    <div style={{ width: "100%", marginLeft: "1.5em" }}>
+                      {accessList.length > 0 && (
+                        <div className="my-2">
+                          <i>Accès sélectionnés:</i>
+                        </div>
+                      )}
+                      {accessList.map((access, index) => (
+                        <Badge
+                          key={index}
+                          pill
+                          bg="primary"
+                          onClick={() =>
+                            RemoveBadge(access, accessList, setAccessList)
+                          }
+                          style={{ cursor: "pointer", margin: "2px" }}
+                        >
+                          {access.toUpperCase()}
+                        </Badge>
+                      ))}
+                    </div>
                   </ButtonInputLabel>
                 </div>
 
                 {/* //* ====================== LANGUAGE ====================== */}
 
-                <div>
+                <div className="mb-3">
                   <ButtonInputLabel
-                    label="Langue"
+                    label="LANGUES"
+                    name="lang"
+                    value={newBadge.lang}
+                    onChange={handleNewBadge}
                     onClick={addNewLang}
                     variant="outline-danger"
+                    bg="danger"
                   >
-                    {langArray.map((lang, index) => (
-                      <ButtonInput
-                        key={index}
-                        tag={lang}
-                        value={lang}
-                        variant="outline-danger"
-                        onClick={
-                          langList.includes(lang)
-                            ? () => RemoveBadge(lang, langList, setLangList)
-                            : () => SelectBadge(lang, langList, setLangList)
-                        }
-                        checked={langList.includes(lang)}
-                      />
-                    ))}
+                    <div>
+                      {langArray.map(
+                        (lang, index) =>
+                          lang !== "" && (
+                            <ButtonInput
+                              key={index}
+                              tag={lang}
+                              value={lang}
+                              variant="outline-danger"
+                              onClick={
+                                langList.includes(lang)
+                                  ? () =>
+                                      RemoveBadge(lang, langList, setLangList)
+                                  : () =>
+                                      SelectBadge(lang, langList, setLangList)
+                              }
+                              checked={langList.includes(lang)}
+                            />
+                          )
+                      )}
+                    </div>
+                    <div style={{ width: "100%", marginLeft: "1.5em" }}>
+                      {langList.length > 0 && (
+                        <div className="my-2">
+                          <i>Langues sélectionnées:</i>
+                        </div>
+                      )}
+                      {langList.map((lang, index) => (
+                        <Badge
+                          key={index}
+                          pill
+                          bg="danger"
+                          onClick={() =>
+                            RemoveBadge(lang, langList, setLangList)
+                          }
+                          style={{ cursor: "pointer", margin: "2px" }}
+                        >
+                          {lang.toUpperCase()}
+                        </Badge>
+                      ))}
+                    </div>
                   </ButtonInputLabel>
                 </div>
 

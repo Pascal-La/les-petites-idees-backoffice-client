@@ -1,7 +1,11 @@
+import { useState } from "react";
 import {
+  Badge,
   Button,
   ButtonGroup,
   Form,
+  FormControl,
+  InputGroup,
   Spinner,
   ToggleButton,
 } from "react-bootstrap";
@@ -52,14 +56,46 @@ export const TextInput = ({
   );
 };
 
-export const ButtonInputLabel = ({ label, variant, onClick, children }) => {
+export const ButtonInputLabel = ({
+  label,
+  name,
+  variant,
+  bg,
+  value,
+  onClick,
+  onChange,
+  children,
+}) => {
+  const [addInput, setAddInput] = useState(false);
   return (
     <>
       <div className="d-flex align-items-center">
         <label>{label}</label>
-        <Button variant={variant} onClick={onClick} size="sm" className="m-2">
-          +
-        </Button>
+        <Badge
+          bg={bg}
+          onClick={() => setAddInput(!addInput)}
+          size="sm"
+          className="m-2"
+        >
+          {addInput ? "x" : "+"}
+        </Badge>
+        {addInput && (
+          <div>
+            <InputGroup size="sm">
+              <FormControl
+                name={name}
+                placeholder="Ajouter..."
+                value={value}
+                onChange={onChange}
+              />
+              {value.trim("") && (
+                <Button variant={variant} onClick={onClick}>
+                  +
+                </Button>
+              )}
+            </InputGroup>
+          </div>
+        )}
       </div>
       <ButtonGroup className="d-flex flex-wrap" size="sm">
         {children}
@@ -73,6 +109,7 @@ export const ButtonInput = ({ tag, value, variant, onClick, checked }) => {
     <ToggleButton
       className="m-1 rounded"
       type="checkbox"
+      size="sm"
       value={value}
       variant={variant}
       onClick={onClick}

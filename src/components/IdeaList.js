@@ -119,7 +119,7 @@ const IdeaList = () => {
               <tr>
                 <td>{index + 1}</td>
                 <img
-                  className="rounded"
+                  className="rounded img-thumbnail"
                   src={idea.logo}
                   alt={idea.name}
                   height={80}
