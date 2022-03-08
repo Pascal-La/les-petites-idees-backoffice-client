@@ -1,15 +1,14 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.scss";
 
 import App from "./App";
-import UpdateIdea from "./components/UpdateIdea";
 import Login from "./pages/Login";
-import NewIdea from "./components/NewIdea";
-
-import "./index.scss";
+import NewIdea from "./pages/NewIdea";
+import UpdateIdea from "./pages/UpdateIdea";
 
 ReactDOM.render(
   <React.StrictMode>

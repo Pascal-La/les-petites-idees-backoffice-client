@@ -118,23 +118,33 @@ const IdeaList = () => {
             <tbody key={index}>
               <tr>
                 <td>{index + 1}</td>
-                <img src={idea.logo} alt={idea.name} height={80} width={80} />
+                <img
+                  className="rounded"
+                  src={idea.logo}
+                  alt={idea.name}
+                  height={80}
+                  width={80}
+                />
                 <td>{idea.name}</td>
                 <td>{idea.webSite}</td>
                 <td>{idea.description}</td>
                 <td>
                   {idea.tags.map((tag) => (
-                    <Badge bg="info">{tag.toUpperCase()}</Badge>
+                    <Badge key={tag} bg="info">
+                      {tag.toUpperCase()}
+                    </Badge>
                   ))}
                 </td>
                 <td>
                   {idea.access.map((access) => (
-                    <Badge bg="success">{access.toUpperCase()}</Badge>
+                    <Badge key={access} bg="success">
+                      {access.toUpperCase()}
+                    </Badge>
                   ))}
                 </td>
                 <td>
-                  {idea.language.map((language) => (
-                    <Badge>{language.toUpperCase()}</Badge>
+                  {idea.language.map((lang) => (
+                    <Badge key={lang}>{lang.toUpperCase()}</Badge>
                   ))}
                 </td>
                 {idea.star ? (
