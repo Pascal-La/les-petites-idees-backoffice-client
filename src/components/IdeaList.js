@@ -100,7 +100,7 @@ const IdeaList = () => {
         </Link>
       </div>
       <Container>
-        <Table responsive size="sm" hover className="mt-4 text-center">
+        <Table responsive size="sm" hover className="mt-4">
           <thead>
             <tr>
               <th>#</th>
@@ -130,21 +130,21 @@ const IdeaList = () => {
                 <td>{idea.description}</td>
                 <td>
                   {idea.tags.map((tag) => (
-                    <Badge key={tag} bg="info">
+                    <Badge key={tag} pill bg="success">
                       {tag.toUpperCase()}
                     </Badge>
                   ))}
                 </td>
                 <td>
                   {idea.access.map((access) => (
-                    <Badge key={access} bg="success">
-                      {access.toUpperCase()}
-                    </Badge>
+                    <Badge key={access} pill >{access.toUpperCase()}</Badge>
                   ))}
                 </td>
                 <td>
                   {idea.language.map((lang) => (
-                    <Badge key={lang}>{lang.toUpperCase()}</Badge>
+                    <Badge key={lang} pill bg="danger">
+                      {lang.toUpperCase()}
+                    </Badge>
                   ))}
                 </td>
                 {idea.star ? (

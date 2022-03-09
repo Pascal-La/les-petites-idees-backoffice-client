@@ -14,7 +14,7 @@ export const LogoInput = ({ src, alt, height, className, onClick }) => {
   return (
     <>
       <div>
-        <label>Logo</label>
+        <label>LOGO</label>
       </div>
       <div className="d-flex justify-content-center">
         <img
@@ -40,8 +40,8 @@ export const TextInput = ({
   placeholder,
 }) => {
   return (
-    <Form.Group className="mb-2">
-      <Form.Label>{label}</Form.Label>
+    <Form.Group className="mb-3">
+      <Form.Label>{label.toUpperCase()}</Form.Label>
       <Form.Control
         as={as}
         style={style}
@@ -60,7 +60,6 @@ export const ButtonInputLabel = ({
   label,
   name,
   variant,
-  bg,
   value,
   onClick,
   onChange,
@@ -70,14 +69,9 @@ export const ButtonInputLabel = ({
   return (
     <>
       <div className="d-flex align-items-center">
-        <label>{label}</label>
-        <Badge
-          bg={bg}
-          onClick={() => setAddInput(!addInput)}
-          size="sm"
-          className="m-2"
-        >
-          {addInput ? "x" : "+"}
+        <label>{label.toUpperCase()}</label>
+        <Badge bg="info" onClick={() => setAddInput(!addInput)} className="m-1">
+          {addInput ? "❌​" : "➕"}
         </Badge>
         {addInput && (
           <div>
@@ -85,7 +79,7 @@ export const ButtonInputLabel = ({
               <FormControl
                 name={name}
                 placeholder="Ajouter..."
-                value={value}
+                value={value.toUpperCase()}
                 onChange={onChange}
               />
               {value.trim("") && (
@@ -104,18 +98,30 @@ export const ButtonInputLabel = ({
   );
 };
 
-export const ButtonInput = ({ tag, value, variant, onClick, checked }) => {
+export const BadgePill = ({ value, bg, onClick }) => {
+  return (
+    <Badge
+      pill
+      bg={bg}
+      onClick={onClick}
+      style={{ cursor: "pointer", margin: "2px" }}
+    >
+      {value.toUpperCase()}
+    </Badge>
+  );
+};
+
+export const ButtonInput = ({ value, variant, onClick, checked }) => {
   return (
     <ToggleButton
       className="m-1 rounded"
       type="checkbox"
       size="sm"
-      value={value}
       variant={variant}
       onClick={onClick}
       checked={checked}
     >
-      {tag.toUpperCase()}
+      {value.toUpperCase()}
     </ToggleButton>
   );
 };

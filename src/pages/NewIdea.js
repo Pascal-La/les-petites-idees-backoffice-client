@@ -1,14 +1,8 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { ButtonGroup, Col, Form, Row, ToggleButton } from "react-bootstrap";
 import {
-  Badge,
-  ButtonGroup,
-  Col,
-  Form,
-  Row,
-  ToggleButton,
-} from "react-bootstrap";
-import {
+  BadgePill,
   ButtonInput,
   ButtonInputLabel,
   LogoInput,
@@ -79,6 +73,7 @@ const NewIdea = () => {
         star: newIdea.star,
       });
       setLoading(false);
+      window.location.href = "/";
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -111,6 +106,7 @@ const NewIdea = () => {
   const tagArray = Array.from(new Set(fetchTags)); // Removing doubles
 
   const addNewTag = () => {
+    if (tagList.includes(newBadge.tags)) return;
     tagList.push(newBadge.tags);
     setNewBadge({ ...newBadge, tags: "" }); // Clearing the input
   };
@@ -123,6 +119,7 @@ const NewIdea = () => {
   const accessArray = Array.from(new Set(fetchAccess)); // Removing doubles
 
   const addNewAccess = () => {
+    if (accessList.includes(newBadge.access)) return;
     accessList.push(newBadge.access);
     setNewBadge({ ...newBadge, access: "" }); // Clearing the input
   };
@@ -135,6 +132,7 @@ const NewIdea = () => {
   const langArray = Array.from(new Set(fetchLang)); // Removing doubles
 
   const addNewLang = () => {
+    if (langList.includes(newBadge.lang)) return;
     langList.push(newBadge.lang);
     setNewBadge({ ...newBadge, lang: "" }); // Clearing the input
   };
@@ -172,7 +170,7 @@ const NewIdea = () => {
             md={6}
             className="text-secondary bg-light px-5 py-4 rounded"
           >
-            <h1 className="mb-5 text-center">Ajouter une idée</h1>
+            <h1 className="mb-5 mt-3 text-center">Ajouter une idée</h1>
             <Row>
               <Col
                 xs={12}
@@ -181,7 +179,7 @@ const NewIdea = () => {
               >
                 {/* //* ======================== LOGO ======================== */}
 
-                <div className="d-flex flex-column justify-content-center mb-2">
+                <div className="d-flex flex-column justify-content-center mb-3">
                   <LogoInput
                     src={newIdea.logo}
                     alt={newIdea.name}
@@ -232,7 +230,7 @@ const NewIdea = () => {
                   onChange={handleChange}
                   placeholder="Ajouter une description"
                   required
-                  style={{ height: "200px" }}
+                  style={{ height: "150px" }}
                 />
               </Col>
               <Col
@@ -244,13 +242,12 @@ const NewIdea = () => {
 
                 <div className="mb-3">
                   <ButtonInputLabel
-                    label="TAGS"
+                    label="tags"
                     name="tags"
                     value={newBadge.tags}
                     onChange={handleNewBadge}
                     onClick={addNewTag}
                     variant="outline-success"
-                    bg="success"
                   >
                     <div>
                       {tagArray.map(
@@ -258,7 +255,6 @@ const NewIdea = () => {
                           tag !== "" && (
                             <ButtonInput
                               key={index}
-                              tag={tag}
                               value={tag}
                               variant="outline-success"
                               onClick={
@@ -278,15 +274,12 @@ const NewIdea = () => {
                         </div>
                       )}
                       {tagList.map((tag, index) => (
-                        <Badge
+                        <BadgePill
                           key={index}
-                          pill
+                          value={tag}
                           bg="success"
                           onClick={() => RemoveBadge(tag, tagList, setTagList)}
-                          style={{ cursor: "pointer", margin: "2px" }}
-                        >
-                          {tag.toUpperCase()}
-                        </Badge>
+                        />
                       ))}
                     </div>
                   </ButtonInputLabel>
@@ -296,13 +289,12 @@ const NewIdea = () => {
 
                 <div className="mb-3">
                   <ButtonInputLabel
-                    label="ACCES"
+                    label="accès"
                     name="access"
                     value={newBadge.access}
                     onChange={handleNewBadge}
                     onClick={addNewAccess}
                     variant="outline-primary"
-                    bg="primary"
                   >
                     <div>
                       {accessArray.map(
@@ -310,7 +302,6 @@ const NewIdea = () => {
                           access !== "" && (
                             <ButtonInput
                               key={index}
-                              tag={access}
                               value={access}
                               variant="outline-primary"
                               onClick={
@@ -340,17 +331,13 @@ const NewIdea = () => {
                         </div>
                       )}
                       {accessList.map((access, index) => (
-                        <Badge
+                        <BadgePill
                           key={index}
-                          pill
-                          bg="primary"
+                          value={access}
                           onClick={() =>
                             RemoveBadge(access, accessList, setAccessList)
                           }
-                          style={{ cursor: "pointer", margin: "2px" }}
-                        >
-                          {access.toUpperCase()}
-                        </Badge>
+                        />
                       ))}
                     </div>
                   </ButtonInputLabel>
@@ -360,13 +347,12 @@ const NewIdea = () => {
 
                 <div className="mb-3">
                   <ButtonInputLabel
-                    label="LANGUES"
+                    label="langues"
                     name="lang"
                     value={newBadge.lang}
                     onChange={handleNewBadge}
                     onClick={addNewLang}
                     variant="outline-danger"
-                    bg="danger"
                   >
                     <div>
                       {langArray.map(
@@ -374,7 +360,6 @@ const NewIdea = () => {
                           lang !== "" && (
                             <ButtonInput
                               key={index}
-                              tag={lang}
                               value={lang}
                               variant="outline-danger"
                               onClick={
@@ -396,17 +381,14 @@ const NewIdea = () => {
                         </div>
                       )}
                       {langList.map((lang, index) => (
-                        <Badge
+                        <BadgePill
                           key={index}
-                          pill
+                          value={lang}
                           bg="danger"
                           onClick={() =>
                             RemoveBadge(lang, langList, setLangList)
                           }
-                          style={{ cursor: "pointer", margin: "2px" }}
-                        >
-                          {lang.toUpperCase()}
-                        </Badge>
+                        />
                       ))}
                     </div>
                   </ButtonInputLabel>

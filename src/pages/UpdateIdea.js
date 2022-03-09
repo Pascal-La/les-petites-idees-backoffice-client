@@ -1,6 +1,8 @@
-import { useRef, useState } from "react";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 import { ButtonGroup, Col, Form, Row, ToggleButton } from "react-bootstrap";
 import {
+  BadgePill,
   ButtonInput,
   ButtonInputLabel,
   LogoInput,
@@ -8,9 +10,10 @@ import {
   TextInput,
 } from "../components/FormInput";
 import Header from "../components/Header";
+import useBadge from "../hooks/useBadge";
 
 const UpdateIdea = () => {
-  const [updateIdea, setUpdateIdea] = useState({
+  const [newIdea, setNewIdea] = useState({
     logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
     name: "",
     webSite: "",
@@ -20,78 +23,67 @@ const UpdateIdea = () => {
     language: [],
     star: false,
   });
+  const [loading, setLoading] = useState(false);
+  const [fetchData, setFetchData] = useState([]);
 
+  // onChange tags, access & languages
+  const [newBadge, setNewBadge] = useState({
+    tags: "",
+    access: "",
+    lang: "",
+  });
+
+  // Custom Hook to select and remove tags, access & language badges on click
+  const [SelectBadge, RemoveBadge] = useBadge();
+
+  // Aim the file input by clicking <img>
   const logoRef = useRef();
-
   const handleLogoRef = () => {
     logoRef.current.click();
   };
 
-  //* ========================= TAG ========================
+  //* ====================== FETCH IDEAS ======================
 
-  const tagArray = [
-    "Marketing",
-    "Développement",
-    "Finance",
-    "No-Code",
-    "Automatisation",
-  ];
-  const [tagList, setTagList] = useState([]);
-
-  const handleTag = (e) => {
-    setTagList([...tagList, e]);
+  const fetchIdea = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/ideas/getAllIdeas/"
+      );
+      setFetchData(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleRemoveTag = (e) => {
-    const updateTagList = [...tagList].filter((tag) => tag !== e);
-    setTagList(updateTagList);
+  //* ====================== SUBMIT FORM ======================
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      await axios.post("http://localhost:5000/api/ideas/addNewIdea/", {
+        logo: newIdea.logo,
+        name: newIdea.name,
+        webSite: newIdea.webSite,
+        description: newIdea.description,
+        tags: tagList,
+        access: accessList,
+        language: langList,
+        star: newIdea.star,
+      });
+      setLoading(false);
+      window.location.href = "/";
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
-  //* ======================= ACCESS =======================
-
-  const accessArray = ["gratuit", "gratuit 1 mois", "inscription", "payant"];
-  const [accessList, setAccessList] = useState([]);
-
-  const handleAccess = (e) => {
-    setAccessList([...accessList, e]);
-  };
-
-  const handleRemoveAccess = (e) => {
-    const updateAccessList = [...accessList].filter((access) => access !== e);
-    setAccessList(updateAccessList);
-  };
-
-  //* ====================== LANGUAGE ======================
-
-  const languageArray = ["français", "anglais"];
-  const [languageList, setLanguageList] = useState([]);
-
-  const handleLanguage = (e) => {
-    setLanguageList([...languageList, e]);
-  };
-
-  const handleRemoveLanguage = (e) => {
-    const updateLanguageList = [...languageList].filter((lang) => lang !== e);
-    setLanguageList(updateLanguageList);
-  };
-
-  //* ======================================================
-
-  const handleChange = (e) => {
-    setUpdateIdea({ ...updateIdea, [e.target.name]: e.target.value });
-  };
-
-  const handlePicture = (e) => {
-    let reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    console.log(e.target.files[0]);
-    reader.onload = (e) => {
-      setUpdateIdea({ ...updateIdea, logo: e.target.result });
-    };
-  };
+  //* ====================== RESET FORM ======================
 
   const handleReset = () => {
-    setUpdateIdea({
+    setNewIdea({
       logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
       name: "",
       webSite: "",
@@ -103,15 +95,73 @@ const UpdateIdea = () => {
     });
     setTagList([]);
     setAccessList([]);
-    setLanguageList([]);
+    setLangList([]);
   };
 
-  // console.log(updateIdea);
+  //* ======================== TAGS ========================
+
+  const [tagList, setTagList] = useState([]);
+  let fetchTags = []; // Pushing the tags from fetchData
+  fetchData.map((data) => fetchTags.push(...data.tags));
+  const tagArray = Array.from(new Set(fetchTags)); // Removing doubles
+
+  const addNewTag = () => {
+    if (tagList.includes(newBadge.tags)) return;
+    tagList.push(newBadge.tags);
+    setNewBadge({ ...newBadge, tags: "" }); // Clearing the input
+  };
+
+  //* ======================= ACCESS =======================
+
+  const [accessList, setAccessList] = useState([]);
+  let fetchAccess = []; // Pushing the access from fetchData
+  fetchData.map((data) => fetchAccess.push(...data.access));
+  const accessArray = Array.from(new Set(fetchAccess)); // Removing doubles
+
+  const addNewAccess = () => {
+    if (accessList.includes(newBadge.access)) return;
+    accessList.push(newBadge.access);
+    setNewBadge({ ...newBadge, access: "" }); // Clearing the input
+  };
+
+  //* ====================== LANGUAGE ======================
+
+  const [langList, setLangList] = useState([]);
+  let fetchLang = []; // Pushing the language from fetchData
+  fetchData.map((data) => fetchLang.push(...data.language));
+  const langArray = Array.from(new Set(fetchLang)); // Removing doubles
+
+  const addNewLang = () => {
+    if (langList.includes(newBadge.lang)) return;
+    langList.push(newBadge.lang);
+    setNewBadge({ ...newBadge, lang: "" }); // Clearing the input
+  };
+
+  //* ======================================================
+
+  const handleChange = (e) => {
+    setNewIdea({ ...newIdea, [e.target.name]: e.target.value });
+  };
+
+  const handleNewBadge = (e) => {
+    setNewBadge({ ...newBadge, [e.target.name]: e.target.value });
+  };
+
+  const handlePicture = (e) => {
+    let reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    console.log(e.target.files[0]);
+    reader.onload = (e) => {
+      setNewIdea({ ...newIdea, logo: e.target.result });
+    };
+  };
+
+  useEffect(() => fetchIdea(), []);
 
   return (
     <>
       <Header />
-      <Form className="pt-5 my-5">
+      <Form className="pt-5 my-5" onSubmit={handleSubmit}>
         <Row>
           <Col />
           <Col
@@ -120,7 +170,7 @@ const UpdateIdea = () => {
             md={6}
             className="text-secondary bg-light px-5 py-4 rounded"
           >
-            <h1 className="mb-5 text-center">Modifier une idée</h1>
+            <h1 className="mb-5 mt-3 text-center">Modifier une idée</h1>
             <Row>
               <Col
                 xs={12}
@@ -129,10 +179,10 @@ const UpdateIdea = () => {
               >
                 {/* //* ======================== LOGO ======================== */}
 
-                <div className="d-flex flex-column justify-content-center mb-2">
+                <div className="d-flex flex-column justify-content-center mb-3">
                   <LogoInput
-                    src={updateIdea.logo}
-                    alt={updateIdea.name}
+                    src={newIdea.logo}
+                    alt={newIdea.name}
                     height={100}
                     className="m-1 rounded"
                     onClick={handleLogoRef}
@@ -152,7 +202,7 @@ const UpdateIdea = () => {
                   label="Nom"
                   type="text"
                   name="name"
-                  value={updateIdea.name}
+                  value={newIdea.name}
                   onChange={handleChange}
                   placeholder="Nom de l'idée"
                   required
@@ -164,7 +214,7 @@ const UpdateIdea = () => {
                   label="Site web"
                   type="text"
                   name="webSite"
-                  value={updateIdea.webSite}
+                  value={newIdea.webSite}
                   onChange={handleChange}
                   placeholder="Ajouter un site"
                   required
@@ -176,11 +226,11 @@ const UpdateIdea = () => {
                   label="Description"
                   as="textarea"
                   name="description"
-                  value={updateIdea.description}
+                  value={newIdea.description}
                   onChange={handleChange}
                   placeholder="Ajouter une description"
                   required
-                  style={{ height: "200px" }}
+                  style={{ height: "150px" }}
                 />
               </Col>
               <Col
@@ -190,64 +240,157 @@ const UpdateIdea = () => {
               >
                 {/* //* ======================== TAGS ======================== */}
 
-                <div>
-                  <ButtonInputLabel label="Tags" variant="outline-success">
-                    {tagArray.map((tag) => (
-                      <ButtonInput
-                        key={tag}
-                        tag={tag}
-                        value={tag}
-                        variant="outline-success"
-                        onClick={
-                          tagList.includes(tag)
-                            ? () => handleRemoveTag(tag)
-                            : () => handleTag(tag)
-                        }
-                        checked={tagList.includes(tag)}
-                      />
-                    ))}
+                <div className="mb-3">
+                  <ButtonInputLabel
+                    label="tags"
+                    name="tags"
+                    value={newBadge.tags}
+                    onChange={handleNewBadge}
+                    onClick={addNewTag}
+                    variant="outline-success"
+                  >
+                    <div>
+                      {tagArray.map(
+                        (tag, index) =>
+                          tag !== "" && (
+                            <ButtonInput
+                              key={index}
+                              value={tag}
+                              variant="outline-success"
+                              onClick={
+                                tagList.includes(tag)
+                                  ? () => RemoveBadge(tag, tagList, setTagList)
+                                  : () => SelectBadge(tag, tagList, setTagList)
+                              }
+                              checked={tagList.includes(tag)}
+                            />
+                          )
+                      )}
+                    </div>
+                    <div style={{ width: "100%", marginLeft: "1.5em" }}>
+                      {tagList.length > 0 && (
+                        <div className="my-2">
+                          <i>Tags sélectionnés:</i>
+                        </div>
+                      )}
+                      {tagList.map((tag, index) => (
+                        <BadgePill
+                          key={index}
+                          value={tag}
+                          bg="success"
+                          onClick={() => RemoveBadge(tag, tagList, setTagList)}
+                        />
+                      ))}
+                    </div>
                   </ButtonInputLabel>
                 </div>
 
                 {/* //* ======================= ACCESS ======================= */}
 
-                <div>
-                  <ButtonInputLabel label="Accès" variant="outline-primary">
-                    {accessArray.map((access) => (
-                      <ButtonInput
-                        key={access}
-                        tag={access}
-                        value={access}
-                        variant="outline-primary"
-                        onClick={
-                          accessList.includes(access)
-                            ? () => handleRemoveAccess(access)
-                            : () => handleAccess(access)
-                        }
-                        checked={accessList.includes(access)}
-                      />
-                    ))}
+                <div className="mb-3">
+                  <ButtonInputLabel
+                    label="accès"
+                    name="access"
+                    value={newBadge.access}
+                    onChange={handleNewBadge}
+                    onClick={addNewAccess}
+                    variant="outline-primary"
+                  >
+                    <div>
+                      {accessArray.map(
+                        (access, index) =>
+                          access !== "" && (
+                            <ButtonInput
+                              key={index}
+                              value={access}
+                              variant="outline-primary"
+                              onClick={
+                                accessList.includes(access)
+                                  ? () =>
+                                      RemoveBadge(
+                                        access,
+                                        accessList,
+                                        setAccessList
+                                      )
+                                  : () =>
+                                      SelectBadge(
+                                        access,
+                                        accessList,
+                                        setAccessList
+                                      )
+                              }
+                              checked={accessList.includes(access)}
+                            />
+                          )
+                      )}
+                    </div>
+                    <div style={{ width: "100%", marginLeft: "1.5em" }}>
+                      {accessList.length > 0 && (
+                        <div className="my-2">
+                          <i>Accès sélectionnés:</i>
+                        </div>
+                      )}
+                      {accessList.map((access, index) => (
+                        <BadgePill
+                          key={index}
+                          value={access}
+                          onClick={() =>
+                            RemoveBadge(access, accessList, setAccessList)
+                          }
+                        />
+                      ))}
+                    </div>
                   </ButtonInputLabel>
                 </div>
 
                 {/* //* ====================== LANGUAGE ====================== */}
 
-                <div>
-                  <ButtonInputLabel label="Langue" variant="outline-danger">
-                    {languageArray.map((lang) => (
-                      <ButtonInput
-                        key={lang}
-                        tag={lang}
-                        value={lang}
-                        variant="outline-danger"
-                        onClick={
-                          languageList.includes(lang)
-                            ? () => handleRemoveLanguage(lang)
-                            : () => handleLanguage(lang)
-                        }
-                        checked={languageList.includes(lang)}
-                      />
-                    ))}
+                <div className="mb-3">
+                  <ButtonInputLabel
+                    label="langues"
+                    name="lang"
+                    value={newBadge.lang}
+                    onChange={handleNewBadge}
+                    onClick={addNewLang}
+                    variant="outline-danger"
+                  >
+                    <div>
+                      {langArray.map(
+                        (lang, index) =>
+                          lang !== "" && (
+                            <ButtonInput
+                              key={index}
+                              value={lang}
+                              variant="outline-danger"
+                              onClick={
+                                langList.includes(lang)
+                                  ? () =>
+                                      RemoveBadge(lang, langList, setLangList)
+                                  : () =>
+                                      SelectBadge(lang, langList, setLangList)
+                              }
+                              checked={langList.includes(lang)}
+                            />
+                          )
+                      )}
+                    </div>
+                    <div style={{ width: "100%", marginLeft: "1.5em" }}>
+                      {langList.length > 0 && (
+                        <div className="my-2">
+                          <i>Langues sélectionnées:</i>
+                        </div>
+                      )}
+                      {langList.map((lang, index) => (
+                        <BadgePill
+                          key={index}
+                          value={lang}
+                          bg="danger"
+                          onClick={() =>
+                            RemoveBadge(lang, langList, setLangList)
+                          }
+                        />
+                      ))}
+                    </div>
                   </ButtonInputLabel>
                 </div>
 
@@ -260,17 +403,14 @@ const UpdateIdea = () => {
                       <ToggleButton
                         className="m-1 rounded"
                         type="radio"
-                        checked={updateIdea.star}
+                        checked={newIdea.star}
                         onClick={() =>
-                          setUpdateIdea({
-                            ...updateIdea,
-                            star: !updateIdea.star,
-                          })
+                          setNewIdea({ ...newIdea, star: !newIdea.star })
                         }
                         variant="outline-warning"
                         size="sm"
                       >
-                        {updateIdea.star ? "Oui" : "Non"}
+                        {newIdea.star ? "Oui" : "Non"}
                       </ToggleButton>
                     </ButtonGroup>
                   </div>
@@ -282,7 +422,7 @@ const UpdateIdea = () => {
               <Row>
                 <Col />
                 <Col xs={8} sm={4} lg={3} className="text-center">
-                  <SubmitButton onClick={handleReset} />
+                  <SubmitButton loading={loading} onClick={handleReset} />
                 </Col>
                 <Col />
               </Row>
