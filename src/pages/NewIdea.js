@@ -9,7 +9,6 @@ import {
   SubmitButton,
   TextInput,
 } from "../components/FormInput";
-import Header from "../components/Header";
 import useBadge from "../hooks/useBadge";
 
 const NewIdea = () => {
@@ -44,7 +43,7 @@ const NewIdea = () => {
 
   //* ====================== FETCH IDEAS ======================
 
-  const fetchIdea = async () => {
+  const fetchIdeas = async () => {
     try {
       const { data } = await axios.get(
         "http://localhost:5000/api/ideas/getAllIdeas/"
@@ -156,11 +155,10 @@ const NewIdea = () => {
     };
   };
 
-  useEffect(() => fetchIdea(), []);
+  useEffect(() => fetchIdeas(), []);
 
   return (
     <>
-      <Header />
       <Form className="pt-5 my-5" onSubmit={handleSubmit}>
         <Row>
           <Col />

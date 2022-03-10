@@ -3,7 +3,7 @@ import logo from "../assets/logo.png";
 
 const Login = () => {
   return (
-    <div className="container d-flex flex-column align-items-center mt-5">
+    <div className="container d-flex flex-column align-items-center pt-5 mt-5">
       <img src={logo} alt="Les Petites Idées" height={200} />
       <Col xs={12} sm={10} md={8} lg={4}>
         <Form>

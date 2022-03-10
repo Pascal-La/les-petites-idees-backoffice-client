@@ -9,11 +9,10 @@ import {
   SubmitButton,
   TextInput,
 } from "../components/FormInput";
-import Header from "../components/Header";
 import useBadge from "../hooks/useBadge";
 
-const UpdateIdea = () => {
-  const [newIdea, setNewIdea] = useState({
+const UpdateIdea = ({ ideaId }) => {
+  const [updateIdea, setUpdateIdea] = useState({
     logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
     name: "",
     webSite: "",
@@ -43,8 +42,9 @@ const UpdateIdea = () => {
   };
 
   //* ====================== FETCH IDEAS ======================
+  // Fetch all the ideas to display all the available badges
 
-  const fetchIdea = async () => {
+  const fetchIdeas = async () => {
     try {
       const { data } = await axios.get(
         "http://localhost:5000/api/ideas/getAllIdeas/"
@@ -55,23 +55,35 @@ const UpdateIdea = () => {
     }
   };
 
-  //* ====================== SUBMIT FORM ======================
+  //* ==================== GET ONE IDEA ====================
+  // Get one idea to modify it
+
+  const fetchOneIdea = async () => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:5000/api/ideas/getOneIdea/${ideaId}`
+      );
+      setUpdateIdea(data);
+      setTagList(data.tags);
+      setAccessList(data.access);
+      setLangList(data.language);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //* =================== SUBMIT UPDATE FORM ===================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:5000/api/ideas/addNewIdea/", {
-        logo: newIdea.logo,
-        name: newIdea.name,
-        webSite: newIdea.webSite,
-        description: newIdea.description,
-        tags: tagList,
-        access: accessList,
-        language: langList,
-        star: newIdea.star,
-      });
+      await axios.put(
+        `http://localhost:5000/api/ideas/updateIdea/${ideaId}/`,
+        updateIdea
+      );
       setLoading(false);
       window.location.href = "/";
     } catch (error) {
@@ -83,7 +95,7 @@ const UpdateIdea = () => {
   //* ====================== RESET FORM ======================
 
   const handleReset = () => {
-    setNewIdea({
+    setUpdateIdea({
       logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
       name: "",
       webSite: "",
@@ -140,7 +152,7 @@ const UpdateIdea = () => {
   //* ======================================================
 
   const handleChange = (e) => {
-    setNewIdea({ ...newIdea, [e.target.name]: e.target.value });
+    setUpdateIdea({ ...updateIdea, [e.target.name]: e.target.value });
   };
 
   const handleNewBadge = (e) => {
@@ -152,15 +164,17 @@ const UpdateIdea = () => {
     reader.readAsDataURL(e.target.files[0]);
     console.log(e.target.files[0]);
     reader.onload = (e) => {
-      setNewIdea({ ...newIdea, logo: e.target.result });
+      setUpdateIdea({ ...updateIdea, logo: e.target.result });
     };
   };
 
-  useEffect(() => fetchIdea(), []);
+  useEffect(() => {
+    fetchOneIdea();
+    fetchIdeas();
+  }, []);
 
   return (
     <>
-      <Header />
       <Form className="pt-5 my-5" onSubmit={handleSubmit}>
         <Row>
           <Col />
@@ -181,8 +195,8 @@ const UpdateIdea = () => {
 
                 <div className="d-flex flex-column justify-content-center mb-3">
                   <LogoInput
-                    src={newIdea.logo}
-                    alt={newIdea.name}
+                    src={updateIdea.logo}
+                    alt={updateIdea.name}
                     height={100}
                     className="m-1 rounded"
                     onClick={handleLogoRef}
@@ -202,7 +216,7 @@ const UpdateIdea = () => {
                   label="Nom"
                   type="text"
                   name="name"
-                  value={newIdea.name}
+                  value={updateIdea.name}
                   onChange={handleChange}
                   placeholder="Nom de l'idée"
                   required
@@ -214,7 +228,7 @@ const UpdateIdea = () => {
                   label="Site web"
                   type="text"
                   name="webSite"
-                  value={newIdea.webSite}
+                  value={updateIdea.webSite}
                   onChange={handleChange}
                   placeholder="Ajouter un site"
                   required
@@ -226,7 +240,7 @@ const UpdateIdea = () => {
                   label="Description"
                   as="textarea"
                   name="description"
-                  value={newIdea.description}
+                  value={updateIdea.description}
                   onChange={handleChange}
                   placeholder="Ajouter une description"
                   required
@@ -403,14 +417,17 @@ const UpdateIdea = () => {
                       <ToggleButton
                         className="m-1 rounded"
                         type="radio"
-                        checked={newIdea.star}
+                        checked={updateIdea.star}
                         onClick={() =>
-                          setNewIdea({ ...newIdea, star: !newIdea.star })
+                          setUpdateIdea({
+                            ...updateIdea,
+                            star: !updateIdea.star,
+                          })
                         }
                         variant="outline-warning"
                         size="sm"
                       >
-                        {newIdea.star ? "Oui" : "Non"}
+                        {updateIdea.star ? "Oui" : "Non"}
                       </ToggleButton>
                     </ButtonGroup>
                   </div>

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Badge, Button, Container, Form, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const IdeaList = () => {
+const IdeaList = ({ ideaId }) => {
   const [ideas, setIdeas] = useState([]);
   const [sortedNameAsc, setSortedNameAsc] = useState(false);
   const [sortedStar, setSortedStar] = useState(false);
@@ -137,7 +137,9 @@ const IdeaList = () => {
                 </td>
                 <td>
                   {idea.access.map((access) => (
-                    <Badge key={access} pill >{access.toUpperCase()}</Badge>
+                    <Badge key={access} pill>
+                      {access.toUpperCase()}
+                    </Badge>
                   ))}
                 </td>
                 <td>
@@ -153,7 +155,11 @@ const IdeaList = () => {
                   <td></td>
                 )}
                 <td>
-                  <Link to={`/update/${idea._id}`} className="text-black">
+                  <Link
+                    to={`/update/${idea._id}`}
+                    onClick={() => ideaId(idea._id)}
+                    className="text-black"
+                  >
                     <Button variant="warning">&#9998;</Button>
                   </Link>
                 </td>
