@@ -1,18 +1,32 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { Badge, Button, Container, Form, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Badge, Button, Container, Form, Table } from "react-bootstrap";
+import axios from "axios";
+
+import { useAuthState } from "../context/auth";
 
 const IdeaList = ({ ideaId }) => {
+  const { user, token } = useAuthState();
+
+  // console.log({user});
+
   const [ideas, setIdeas] = useState([]);
   const [sortedNameAsc, setSortedNameAsc] = useState(false);
   const [sortedStar, setSortedStar] = useState(false);
   const [sortingSelect, setSortingSelect] = useState("default");
 
   const fetchIdeas = async () => {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     try {
       const { data } = await axios.get(
-        "http://localhost:5000/api/ideas/getAllIdeas"
+        "http://localhost:5000/api/ideas/idealist",
+        config
       );
       setIdeas(data);
     } catch (error) {
@@ -85,6 +99,11 @@ const IdeaList = ({ ideaId }) => {
   return (
     <>
       <div className="d-flex pt-5 mt-5 justify-content-center">
+        <h1 style={{ color: "#4749f4" }}>
+          {user && `Bienvenue, ${user.firstname}`}
+        </h1>
+      </div>
+      <div className="d-flex mt-4 justify-content-center">
         <div>
           <Form.Select onChange={(e) => handleChange(e)}>
             <option value="default">Trier par...</option>
@@ -157,6 +176,7 @@ const IdeaList = ({ ideaId }) => {
                 <td>
                   <Link
                     to={`/update/${idea._id}`}
+                    // pass the idea's id as string to <App />
                     onClick={() => ideaId(idea._id)}
                     className="text-black"
                   >

@@ -1,6 +1,10 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { ButtonGroup, Col, Form, Row, ToggleButton } from "react-bootstrap";
+import axios from "axios";
+
+import { useAuthState } from "../context/auth";
+import useBadge from "../hooks/useBadge";
+
 import {
   BadgePill,
   ButtonInput,
@@ -9,9 +13,10 @@ import {
   SubmitButton,
   TextInput,
 } from "../components/FormInput";
-import useBadge from "../hooks/useBadge";
 
 const NewIdea = () => {
+  const { token } = useAuthState();
+
   const [newIdea, setNewIdea] = useState({
     logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
     name: "",
@@ -45,8 +50,15 @@ const NewIdea = () => {
 
   const fetchIdeas = async () => {
     try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
       const { data } = await axios.get(
-        "http://localhost:5000/api/ideas/getAllIdeas/"
+        "http://localhost:5000/api/ideas/idealist/",
+        config
       );
       setFetchData(data);
     } catch (error) {
@@ -61,16 +73,26 @@ const NewIdea = () => {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:5000/api/ideas/addNewIdea/", {
-        logo: newIdea.logo,
-        name: newIdea.name,
-        webSite: newIdea.webSite,
-        description: newIdea.description,
-        tags: tagList,
-        access: accessList,
-        language: langList,
-        star: newIdea.star,
-      });
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      await axios.post(
+        "http://localhost:5000/api/ideas/newidea/",
+        {
+          logo: newIdea.logo,
+          name: newIdea.name,
+          webSite: newIdea.webSite,
+          description: newIdea.description,
+          tags: tagList.toUpperCase(),
+          access: accessList.toUpperCase(),
+          language: langList.toUpperCase(),
+          star: newIdea.star,
+        },
+        config
+      );
       setLoading(false);
       window.location.href = "/";
     } catch (error) {
@@ -285,7 +307,7 @@ const NewIdea = () => {
 
                 {/* //* ======================= ACCESS ======================= */}
 
-                <div className="mb-3">
+                <div className="mb-3 p-3 bg-white">
                   <ButtonInputLabel
                     label="accès"
                     name="access"

@@ -1,6 +1,17 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { ButtonGroup, Col, Form, Row, ToggleButton } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  Col,
+  Form,
+  Row,
+  ToggleButton,
+} from "react-bootstrap";
+import axios from "axios";
+
+import { useAuthState } from "../context/auth";
+import useBadge from "../hooks/useBadge";
+
 import {
   BadgePill,
   ButtonInput,
@@ -9,21 +20,14 @@ import {
   SubmitButton,
   TextInput,
 } from "../components/FormInput";
-import useBadge from "../hooks/useBadge";
 
 const UpdateIdea = ({ ideaId }) => {
-  const [updateIdea, setUpdateIdea] = useState({
-    logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
-    name: "",
-    webSite: "",
-    description: "",
-    tags: [],
-    access: [],
-    language: [],
-    star: false,
-  });
+  const { token } = useAuthState();
+
+  const [updateIdea, setUpdateIdea] = useState({});
   const [loading, setLoading] = useState(false);
   const [fetchData, setFetchData] = useState([]);
+  const [confirmdelete, setConfirmDelete] = useState(false);
 
   // onChange tags, access & languages
   const [newBadge, setNewBadge] = useState({
@@ -46,8 +50,15 @@ const UpdateIdea = ({ ideaId }) => {
 
   const fetchIdeas = async () => {
     try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
       const { data } = await axios.get(
-        "http://localhost:5000/api/ideas/getAllIdeas/"
+        "http://localhost:5000/api/ideas/idealist/",
+        config
       );
       setFetchData(data);
     } catch (error) {
@@ -60,14 +71,20 @@ const UpdateIdea = ({ ideaId }) => {
 
   const fetchOneIdea = async () => {
     try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
       const { data } = await axios.get(
-        `http://localhost:5000/api/ideas/getOneIdea/${ideaId}`
+        `http://localhost:5000/api/ideas/singleidea/${ideaId}`,
+        config
       );
       setUpdateIdea(data);
       setTagList(data.tags);
       setAccessList(data.access);
       setLangList(data.language);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -80,14 +97,52 @@ const UpdateIdea = ({ ideaId }) => {
     setLoading(true);
 
     try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
       await axios.put(
-        `http://localhost:5000/api/ideas/updateIdea/${ideaId}/`,
-        updateIdea
+        `http://localhost:5000/api/ideas/updateidea/${ideaId}/`,
+        {
+          logo: updateIdea.logo,
+          name: updateIdea.name,
+          webSite: updateIdea.webSite,
+          description: updateIdea.description,
+          tags: tagList,
+          access: accessList,
+          language: langList,
+          star: updateIdea.star,
+        },
+        config
       );
       setLoading(false);
       window.location.href = "/";
     } catch (error) {
       setLoading(false);
+      console.log(error);
+    }
+  };
+
+  //* ====================== DELETE IDEA ======================
+
+  const deleteIdea = async (e) => {
+    e.preventDefault();
+
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      await axios.delete(
+        `http://localhost:5000/api/ideas/deleteidea/${ideaId}/`,
+        config
+      );
+      window.location.href = "/";
+    } catch (error) {
       console.log(error);
     }
   };
@@ -301,7 +356,7 @@ const UpdateIdea = ({ ideaId }) => {
 
                 {/* //* ======================= ACCESS ======================= */}
 
-                <div className="mb-3">
+                <div className="mb-3 p-3 bg-white">
                   <ButtonInputLabel
                     label="accès"
                     name="access"
@@ -440,6 +495,27 @@ const UpdateIdea = ({ ideaId }) => {
                 <Col />
                 <Col xs={8} sm={4} lg={3} className="text-center">
                   <SubmitButton loading={loading} onClick={handleReset} />
+                  <div className="d-grid gap-2 text-danger mt-4">
+                    <p
+                      onClick={() => setConfirmDelete(true)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Supprimer
+                    </p>
+                    {confirmdelete && (
+                      <div className="d-flex justify-content-around">
+                        <Button onClick={deleteIdea} variant="danger">
+                          Oui
+                        </Button>
+                        <Button
+                          onClick={() => setConfirmDelete(false)}
+                          variant="success"
+                        >
+                          Annuler
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 </Col>
                 <Col />
               </Row>

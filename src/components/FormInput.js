@@ -79,7 +79,7 @@ export const ButtonInputLabel = ({
               <FormControl
                 name={name}
                 placeholder="Ajouter..."
-                value={value.toUpperCase()}
+                value={value}
                 onChange={onChange}
               />
               {value.trim("") && (
@@ -129,13 +129,13 @@ export const ButtonInput = ({ value, variant, onClick, checked }) => {
 export const SubmitButton = ({ loading, onClick }) => {
   return (
     <>
-      <div className="d-grid gap-2 mt-5">
+      <div className="text-primary mt-4" style={{ cursor: "pointer" }}>
+        <p onClick={onClick}>{!loading && "Réinitialiser"}</p>
+      </div>
+      <div className="d-grid gap-2 my-2">
         <Button variant="outline-success" type="submit">
           {loading ? <Spinner animation="border" size="sm" /> : "Valider"}
         </Button>
-      </div>
-      <div className="text-danger mt-2" style={{ cursor: "pointer" }}>
-        <p onClick={onClick}>{!loading && "Réinitialiser"}</p>
       </div>
     </>
   );
