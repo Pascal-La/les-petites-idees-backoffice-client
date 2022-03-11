@@ -252,7 +252,7 @@ const UpdateIdea = ({ ideaId }) => {
                   <LogoInput
                     src={updateIdea.logo}
                     alt={updateIdea.name}
-                    height={100}
+                    height={200}
                     className="m-1 rounded"
                     onClick={handleLogoRef}
                   />
@@ -309,7 +309,7 @@ const UpdateIdea = ({ ideaId }) => {
               >
                 {/* //* ======================== TAGS ======================== */}
 
-                <div className="mb-3">
+                <div className="mb-3 p-3">
                   <ButtonInputLabel
                     label="tags"
                     name="tags"
@@ -414,7 +414,7 @@ const UpdateIdea = ({ ideaId }) => {
 
                 {/* //* ====================== LANGUAGE ====================== */}
 
-                <div className="mb-3">
+                <div className="mb-3 p-3">
                   <ButtonInputLabel
                     label="langues"
                     name="lang"
@@ -465,8 +465,8 @@ const UpdateIdea = ({ ideaId }) => {
 
                 {/* //* ======================== STAR ======================== */}
 
-                <div>
-                  <label>Star</label>
+                <div className="mb-3 p-3 bg-white">
+                  <label>STAR</label>
                   <div>
                     <ButtonGroup>
                       <ToggleButton
