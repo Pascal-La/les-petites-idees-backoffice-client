@@ -223,7 +223,7 @@ const IdeaList = ({ ideaId }) => {
       {searchResult.length === 0 && search.length > 0 && !searchLoading ? (
         <div
           className="d-flex justify-content-center align-items-center mt-5 pt-5 text-warning"
-          style={{ height: "50vh" }}
+          style={{ height: "20vh" }}
         >
           <h1>Aucun résultat</h1>
         </div>
@@ -234,7 +234,7 @@ const IdeaList = ({ ideaId }) => {
           {searchLoading ? (
             <div
               className="d-flex justify-content-center align-items-center mt-5 pt-5 text-warning"
-              style={{ height: "50vh" }}
+              style={{ height: "20vh" }}
             >
               <Spinner animation="border" style={{ fontSize: "10em" }} />
             </div>

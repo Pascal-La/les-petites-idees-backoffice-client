@@ -33,7 +33,7 @@ const authReducer = (state, action) => {
         user: null,
       };
     default:
-      throw new Error(`Action type inconnu: ${action.type}`);
+      console.log(`Action type inconnu: ${action.type}`);
   }
 };
 

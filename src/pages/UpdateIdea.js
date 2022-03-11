@@ -21,6 +21,9 @@ import {
   TextInput,
 } from "../components/FormInput";
 
+const defaultLogo =
+  "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
+
 const UpdateIdea = ({ ideaId }) => {
   const { token } = useAuthState();
 
@@ -151,7 +154,7 @@ const UpdateIdea = ({ ideaId }) => {
 
   const handleReset = () => {
     setUpdateIdea({
-      logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+      logo: defaultLogo,
       name: "",
       webSite: "",
       description: "",

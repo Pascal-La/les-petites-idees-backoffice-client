@@ -14,11 +14,14 @@ import {
   TextInput,
 } from "../components/FormInput";
 
+const defaultLogo =
+  "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
+
 const NewIdea = () => {
   const { token } = useAuthState();
 
   const [newIdea, setNewIdea] = useState({
-    logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    logo: defaultLogo,
     name: "",
     webSite: "",
     description: "",
@@ -105,7 +108,7 @@ const NewIdea = () => {
 
   const handleReset = () => {
     setNewIdea({
-      logo: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+      logo: defaultLogo,
       name: "",
       webSite: "",
       description: "",

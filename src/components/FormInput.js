@@ -70,7 +70,12 @@ export const ButtonInputLabel = ({
     <>
       <div className="d-flex align-items-center">
         <label>{label.toUpperCase()}</label>
-        <Badge bg="info" onClick={() => setAddInput(!addInput)} className="m-1">
+        <Badge
+          bg="info"
+          onClick={() => setAddInput(!addInput)}
+          className="m-1"
+          style={{ cursor: "pointer" }}
+        >
           {addInput ? "❌​" : "➕"}
         </Badge>
         {addInput && (

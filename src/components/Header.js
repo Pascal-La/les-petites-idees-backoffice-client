@@ -1,5 +1,4 @@
 import { Container, Navbar } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useAuthDispatch, useAuthState } from "../context/auth";
 
