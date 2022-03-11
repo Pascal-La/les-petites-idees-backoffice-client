@@ -1,3 +1,5 @@
+import axios from "axios";
+import { shuffle } from "lodash";
 import { useEffect, useState } from "react";
 import {
   Badge,
@@ -11,11 +13,20 @@ import {
   Spinner,
   Table,
 } from "react-bootstrap";
-import axios from "axios";
 import { Link } from "react-router-dom";
-
+import logo from "../assets/logo.png";
 import { useAuthState } from "../context/auth";
 import { BadgePill } from "./FormInput";
+
+const randomGreetings = [
+  "Coucou",
+  "Bonjour",
+  "Salut",
+  "Aloha",
+  "Hello",
+  "Sayonara",
+  "Holà",
+];
 
 const IdeaList = ({ ideaId }) => {
   const { user, token } = useAuthState();
@@ -27,6 +38,14 @@ const IdeaList = ({ ideaId }) => {
   const [sortedNameAsc, setSortedNameAsc] = useState(false);
   const [sortedStar, setSortedStar] = useState(false);
   const [sortingSelect, setSortingSelect] = useState("default");
+
+  const [greeting, setGreeting] = useState(null);
+
+  useEffect(() => {
+    setGreeting(shuffle(randomGreetings).pop());
+  }, []);
+
+  //* ======================== FETCH ALL THE IDEAS ========================
 
   const fetchIdeas = async () => {
     const config = {
@@ -52,6 +71,8 @@ const IdeaList = ({ ideaId }) => {
   useEffect(() => {
     fetchIdeas();
   }, []);
+
+  //* ======================== QUERY IDEAS ========================
 
   const handleSearch = async (query) => {
     setSearch(query);
@@ -146,14 +167,25 @@ const IdeaList = ({ ideaId }) => {
     <>
       <Container>
         <Col>
-          <Col className="d-flex pt-5 mt-5 justify-content-center">
-            <h1 style={{ color: "#4749f4" }}>
-              {user && `Bienvenue, ${user.firstname}`}
-            </h1>
+          <Col
+            className="d-flex flex-column align-items-center py-5 mt-5 rounded"
+            style={{ backgroundColor: "#4749f450" }}
+          >
+            <img src={logo} alt="" width={150} />
+            <h3
+              className="py-2 px-3 rounded"
+              style={{
+                backgroundColor: "#04047cdd",
+                color: "#f2d347",
+                fontStyle: "italic",
+              }}
+            >
+              {user && `${greeting}, ${user.firstname}`}
+            </h3>
           </Col>
           <Row
-            className="mt-5 p-5 text-center"
-            style={{ backgroundColor: "#4749f450" }}
+            className="mt-1 p-5 text-center"
+            style={{ backgroundColor: "#4749f440" }}
           >
             <Col xs={1} />
             <Col xs={3}>
@@ -186,8 +218,8 @@ const IdeaList = ({ ideaId }) => {
             <Col xs={1} />
           </Row>
           <Row
-            className="mt-1 mb-5 p-5 text-center text-center"
-            style={{ backgroundColor: "#4749f465" }}
+            className="mt-1 mb-1 p-5 text-center text-center"
+            style={{ backgroundColor: "#4749f430" }}
           >
             <Col />
             <Col xs={6} className="text-start">
@@ -228,7 +260,7 @@ const IdeaList = ({ ideaId }) => {
 
       {searchResult.length === 0 && search.length > 0 && !searchLoading ? (
         <div
-          className="d-flex justify-content-center align-items-center mt-5 pt-5 text-warning"
+          className="d-flex justify-content-center mt-5 pt-5 text-warning"
           style={{ height: "20vh" }}
         >
           <h1>Aucun résultat</h1>
@@ -236,148 +268,146 @@ const IdeaList = ({ ideaId }) => {
       ) : (
         //* ================ LOADING WHILE SEARCHING ================ */
 
-        <Container>
+        <Container className="mb-5">
           {searchLoading ? (
             <div
-              className="d-flex justify-content-center align-items-center mt-5 pt-5 text-warning"
-              style={{ height: "20vh" }}
+              className="d-flex justify-content-center mt-5 pt-5 text-warning"
+              style={{ height: "100vh" }}
             >
               <Spinner animation="border" style={{ fontSize: "10em" }} />
             </div>
           ) : (
-            <>
-              <Table responsive size="sm" hover className="mt-4">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Logo</th>
-                    <th>Nom</th>
-                    <th>Site web</th>
-                    <th>Description</th>
-                    <th>Tags</th>
-                    <th>Accès</th>
-                    <th>Langue</th>
-                    {/* <th>&#9733;</th> */}
-                  </tr>
-                </thead>
+            <Table responsive style={{ backgroundColor: "#4749f420" }}>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Logo</th>
+                  <th>Nom</th>
+                  <th>Site web</th>
+                  <th>Description</th>
+                  <th>Tags</th>
+                  <th>Accès</th>
+                  <th>Langue</th>
+                  {/* <th>&#9733;</th> */}
+                </tr>
+              </thead>
 
-                {/* //* ================ SEARCH RESULT ================ */}
+              {/* //* ================ SEARCH RESULT ================ */}
 
-                {search.length >= 1 &&
-                  searchResult.map((result, index) => (
-                    <tbody key={index}>
-                      <tr>
-                        <td>
-                          {result.star ? (
-                            <Badge bg="warning">&#9733;</Badge>
-                          ) : (
-                            index + 1
-                          )}
-                        </td>
-                        <img
-                          className="rounded img-thumbnail"
-                          src={result.logo}
-                          alt={result.name}
-                          height={80}
-                          width={80}
-                        />
-                        <td>{result.name}</td>
-                        <td>{result.webSite}</td>
-                        <td>{result.description}</td>
-                        <td>
-                          {result.tags.map((tag) => (
-                            <Badge key={tag} pill bg="success">
-                              {tag.toUpperCase()}
-                            </Badge>
-                          ))}
-                        </td>
-                        <td>
-                          {result.access.map((access) => (
-                            <Badge key={access} pill>
-                              {access.toUpperCase()}
-                            </Badge>
-                          ))}
-                        </td>
-                        <td>
-                          {result.language.map((lang) => (
-                            <Badge key={lang} pill bg="danger">
-                              {lang.toUpperCase()}
-                            </Badge>
-                          ))}
-                        </td>
-                        <td>
-                          <Link
-                            to={`/update/${result._id}`}
-                            // pass the idea's id as string to <App />
-                            onClick={() => ideaId(result._id)}
-                            className="text-black"
-                          >
-                            <Button variant="warning">&#9998;</Button>
-                          </Link>
-                        </td>
-                      </tr>
-                    </tbody>
-                  ))}
+              {search.length >= 1 &&
+                searchResult.map((result, index) => (
+                  <tbody key={index}>
+                    <tr>
+                      <td>
+                        {result.star ? (
+                          <Badge bg="warning">&#9733;</Badge>
+                        ) : (
+                          index + 1
+                        )}
+                      </td>
+                      <img
+                        className="rounded img-thumbnail"
+                        src={result.logo}
+                        alt={result.name}
+                        height={80}
+                        width={80}
+                      />
+                      <td>{result.name}</td>
+                      <td>{result.webSite}</td>
+                      <td>{result.description}</td>
+                      <td>
+                        {result.tags.map((tag) => (
+                          <Badge key={tag} pill bg="success">
+                            {tag.toUpperCase()}
+                          </Badge>
+                        ))}
+                      </td>
+                      <td>
+                        {result.access.map((access) => (
+                          <Badge key={access} pill>
+                            {access.toUpperCase()}
+                          </Badge>
+                        ))}
+                      </td>
+                      <td>
+                        {result.language.map((lang) => (
+                          <Badge key={lang} pill bg="danger">
+                            {lang.toUpperCase()}
+                          </Badge>
+                        ))}
+                      </td>
+                      <td>
+                        <Link
+                          to={`/update/${result._id}`}
+                          // pass the idea's id as string to <App />
+                          onClick={() => ideaId(result._id)}
+                          className="text-black"
+                        >
+                          <Button variant="warning">&#9998;</Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  </tbody>
+                ))}
 
-                {/* //* ================ INITIAL RESULT ================ */}
+              {/* //* ================ INITIAL RESULT ================ */}
 
-                {!search.length > 0 &&
-                  ideas.map((idea, index) => (
-                    <tbody key={index}>
-                      <tr>
-                        <td>
-                          {idea.star ? (
-                            <Badge bg="warning">&#9733;</Badge>
-                          ) : (
-                            index + 1
-                          )}
-                        </td>
-                        <img
-                          className="rounded img-thumbnail"
-                          src={idea.logo}
-                          alt={idea.name}
-                          height={80}
-                          width={80}
-                        />
-                        <td>{idea.name}</td>
-                        <td>{idea.webSite}</td>
-                        <td>{idea.description}</td>
-                        <td>
-                          {idea.tags.map((tag) => (
-                            <Badge key={tag} pill bg="success">
-                              {tag.toUpperCase()}
-                            </Badge>
-                          ))}
-                        </td>
-                        <td>
-                          {idea.access.map((access) => (
-                            <Badge key={access} pill>
-                              {access.toUpperCase()}
-                            </Badge>
-                          ))}
-                        </td>
-                        <td>
-                          {idea.language.map((lang) => (
-                            <Badge key={lang} pill bg="danger">
-                              {lang.toUpperCase()}
-                            </Badge>
-                          ))}
-                        </td>
-                        <td>
-                          <Link
-                            to={`/update/${idea._id}`}
-                            // pass the idea's id as string to <App />
-                            onClick={() => ideaId(idea._id)}
-                            className="text-black"
-                          >
-                            <Button variant="warning">&#9998;</Button>
-                          </Link>
-                        </td>
-                      </tr>
-                    </tbody>
-                  ))}
-              </Table>
-            </>
+              {!search.length > 0 &&
+                ideas.map((idea, index) => (
+                  <tbody key={index}>
+                    <tr>
+                      <td>
+                        {idea.star ? (
+                          <Badge bg="warning">&#9733;</Badge>
+                        ) : (
+                          index + 1
+                        )}
+                      </td>
+                      <img
+                        className="rounded img-thumbnail"
+                        src={idea.logo}
+                        alt={idea.name}
+                        height={80}
+                        width={80}
+                      />
+                      <td>{idea.name}</td>
+                      <td>{idea.webSite}</td>
+                      <td>{idea.description}</td>
+                      <td>
+                        {idea.tags.map((tag) => (
+                          <Badge key={tag} pill bg="success">
+                            {tag.toUpperCase()}
+                          </Badge>
+                        ))}
+                      </td>
+                      <td>
+                        {idea.access.map((access) => (
+                          <Badge key={access} pill>
+                            {access.toUpperCase()}
+                          </Badge>
+                        ))}
+                      </td>
+                      <td>
+                        {idea.language.map((lang) => (
+                          <Badge key={lang} pill bg="danger">
+                            {lang.toUpperCase()}
+                          </Badge>
+                        ))}
+                      </td>
+                      <td>
+                        <Link
+                          to={`/update/${idea._id}`}
+                          // pass the idea's id as string to <App />
+                          onClick={() => ideaId(idea._id)}
+                          className="text-black"
+                        >
+                          <Button variant="warning">&#9998;</Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  </tbody>
+                ))}
+            </Table>
           )}
         </Container>
       )}

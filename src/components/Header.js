@@ -27,12 +27,14 @@ const Header = () => {
               <div
                 className="d-flex rounded justify-content-center align-items-center"
                 style={{
-                  border: "3px solid #04047c",
-                  height: "2em",
                   width: "2em",
+                  height: "2em",
+                  color: "#f2d347",
                   fontSize: "1.5em",
                   fontWeight: "bold",
                   fontStyle: "italic",
+                  backgroundColor: "#04047c",
+                  border: "3px solid #04047c",
                 }}
               >
                 {user.firstname[0]}
