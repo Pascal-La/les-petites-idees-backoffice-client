@@ -12,33 +12,35 @@ const Header = () => {
     window.location.href = "/login";
   };
 
-  console.log(user);
-
   return (
     <>
       <Navbar bg="warning fixed-top">
         <Container>
-          <Link to="/">
+          <a href="/">
             <img src={logo} alt="" height={70} />
-          </Link>
+          </a>
           {user && (
             <div
               onClick={logout}
-              className="d-flex rounded justify-content-center align-items-center"
-              style={{
-                border: "3px solid #04047c",
-                color: "#04047c",
-                height: "2em",
-                width: "2em",
-                fontSize: "1.5em",
-                fontWeight: "bold",
-                fontStyle: "italic",
-                cursor: "pointer",
-              }}
+              className="d-flex flex-column align-items-center"
+              style={{ cursor: "pointer", color: "#04047c" }}
             >
-              {/* {user?.email} */}
-              {user.firstname[0]}
-              {user.lastname[0]}
+              <div
+                className="d-flex rounded justify-content-center align-items-center"
+                style={{
+                  border: "3px solid #04047c",
+                  height: "2em",
+                  width: "3em",
+                  fontSize: "1.5em",
+                  fontWeight: "bold",
+                  fontStyle: "italic",
+                }}
+              >
+                {/* {user?.email} */}
+                {user.firstname[0]}
+                {user.lastname[0]}
+              </div>
+              <div>Se déconnecter</div>
             </div>
           )}
         </Container>
