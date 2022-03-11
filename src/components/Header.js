@@ -29,13 +29,12 @@ const Header = () => {
                 style={{
                   border: "3px solid #04047c",
                   height: "2em",
-                  width: "3em",
+                  width: "2em",
                   fontSize: "1.5em",
                   fontWeight: "bold",
                   fontStyle: "italic",
                 }}
               >
-                {/* {user?.email} */}
                 {user.firstname[0]}
                 {user.lastname[0]}
               </div>

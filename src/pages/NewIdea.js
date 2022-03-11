@@ -191,7 +191,8 @@ const NewIdea = () => {
             xs={10}
             sm={8}
             md={6}
-            className="text-secondary bg-light px-5 py-4 rounded"
+            className="text-secondary px-5 py-4 rounded"
+            style={{ backgroundColor: "#ffffff80" }}
           >
             <h1 className="mb-5 mt-3 text-center">Ajouter une idée</h1>
             <Row>
@@ -310,7 +311,7 @@ const NewIdea = () => {
 
                 {/* //* ======================= ACCESS ======================= */}
 
-                <div className="mb-3 p-3 bg-white">
+                <div className="mb-3 p-3">
                   <ButtonInputLabel
                     label="accès"
                     name="access"
@@ -419,7 +420,7 @@ const NewIdea = () => {
 
                 {/* //* ======================== STAR ======================== */}
 
-                <div className="mb-3 p-3 bg-white">
+                <div className="mb-3 p-3">
                   <label>STAR</label>
                   <div>
                     <ButtonGroup>

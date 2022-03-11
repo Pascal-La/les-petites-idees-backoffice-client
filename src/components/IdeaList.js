@@ -151,10 +151,13 @@ const IdeaList = ({ ideaId }) => {
               {user && `Bienvenue, ${user.firstname}`}
             </h1>
           </Col>
-          <Row className="mt-5">
+          <Row
+            className="mt-5 p-5 text-center"
+            style={{ backgroundColor: "#4749f450" }}
+          >
             <Col xs={1} />
             <Col xs={3}>
-              <InputGroup className="mb-3">
+              <InputGroup>
                 <FormControl
                   onChange={(e) => handleSearch(e.target.value)}
                   placeholder="Recherche par mot-clé..."
@@ -182,9 +185,12 @@ const IdeaList = ({ ideaId }) => {
             </Col>
             <Col xs={1} />
           </Row>
-          <Row className="my-4">
+          <Row
+            className="mt-1 mb-5 p-5 text-center text-center"
+            style={{ backgroundColor: "#97d48f50" }}
+          >
             <Col />
-            <Col xs={6}>
+            <Col xs={6} className="text-start">
               {tagArray.map((tag, index) => (
                 <BadgePill
                   key={index}
