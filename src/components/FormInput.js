@@ -86,6 +86,7 @@ export const ButtonInputLabel = ({
                 placeholder="Ajouter..."
                 value={value}
                 onChange={onChange}
+                onKeyPress={(e) => e.key === "Enter" && e.preventDefault()}
               />
               {value.trim("") && (
                 <Button variant={variant} onClick={onClick}>

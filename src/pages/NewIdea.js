@@ -89,9 +89,9 @@ const NewIdea = () => {
           name: newIdea.name,
           webSite: newIdea.webSite,
           description: newIdea.description,
-          tags: tagList.toUpperCase(),
-          access: accessList.toUpperCase(),
-          language: langList.toUpperCase(),
+          tags: tagList,
+          access: accessList,
+          language: langList,
           star: newIdea.star,
         },
         config

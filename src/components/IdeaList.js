@@ -187,7 +187,7 @@ const IdeaList = ({ ideaId }) => {
           </Row>
           <Row
             className="mt-1 mb-5 p-5 text-center text-center"
-            style={{ backgroundColor: "#97d48f50" }}
+            style={{ backgroundColor: "#4749f465" }}
           >
             <Col />
             <Col xs={6} className="text-start">
