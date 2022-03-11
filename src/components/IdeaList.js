@@ -147,7 +147,6 @@ const IdeaList = ({ ideaId }) => {
             <option value="sortedStarFalse">Stars en derniers</option>
           </Form.Select>
         </div>
-        {/* //! TODO: Search with keyword (query)*/}
         <div>
           <InputGroup className="mb-3">
             <FormControl
