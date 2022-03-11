@@ -146,13 +146,14 @@ const IdeaList = ({ ideaId }) => {
     <>
       <Container>
         <Col>
-          <Col className="d-flex pt-5 mt-5">
+          <Col className="d-flex pt-5 mt-5 justify-content-center">
             <h1 style={{ color: "#4749f4" }}>
               {user && `Bienvenue, ${user.firstname}`}
             </h1>
           </Col>
           <Row className="mt-5">
-            <Col>
+            <Col xs={1} />
+            <Col xs={3}>
               <InputGroup className="mb-3">
                 <FormControl
                   onChange={(e) => handleSearch(e.target.value)}
@@ -160,7 +161,7 @@ const IdeaList = ({ ideaId }) => {
                 />
               </InputGroup>
             </Col>
-            <Col>
+            <Col xs={3}>
               <Form.Select onChange={(e) => handleChange(e)}>
                 <option value="default">Trier par...</option>
                 <option value="sortedNameAsc">Nom de A à Z</option>
@@ -169,19 +170,21 @@ const IdeaList = ({ ideaId }) => {
                 <option value="sortedStarFalse">Stars en derniers</option>
               </Form.Select>
             </Col>
-            <Col xs={2}>
-              <Link to="/newIdea">
-                <Button>+ Nouvelle idée</Button>
-              </Link>
-            </Col>
-            <Col xs={2}>
+            <Col>
               <a href="/">
-                <Button variant="danger">Réinitialiser</Button>
+                <Button>Réinitialiser</Button>
               </a>
             </Col>
+            <Col>
+              <Link to="/newIdea">
+                <Button variant="danger">+ Nouvelle idée</Button>
+              </Link>
+            </Col>
+            <Col xs={1} />
           </Row>
-          <Row className="my-5">
-            <Col xs={8}>
+          <Row className="my-4">
+            <Col />
+            <Col xs={6}>
               {tagArray.map((tag, index) => (
                 <BadgePill
                   key={index}
@@ -210,6 +213,7 @@ const IdeaList = ({ ideaId }) => {
                 />
               ))}
             </Col>
+            <Col />
           </Row>
         </Col>
       </Container>
