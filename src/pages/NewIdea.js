@@ -123,6 +123,9 @@ const NewIdea = () => {
   };
 
   //* ======================== TAGS ========================
+  //! TODO: ================== CUSTOM HOOK =================
+  //! TODO: ================== CUSTOM HOOK =================
+  //! TODO: ================== CUSTOM HOOK =================
 
   const [tagList, setTagList] = useState([]);
   let fetchTags = []; // Pushing the tags from fetchData
@@ -136,6 +139,9 @@ const NewIdea = () => {
   };
 
   //* ======================= ACCESS =======================
+  //! TODO: ================== CUSTOM HOOK =================
+  //! TODO: ================== CUSTOM HOOK =================
+  //! TODO: ================== CUSTOM HOOK =================
 
   const [accessList, setAccessList] = useState([]);
   let fetchAccess = []; // Pushing the access from fetchData
@@ -149,6 +155,9 @@ const NewIdea = () => {
   };
 
   //* ====================== LANGUAGE ======================
+  //! TODO: ================== CUSTOM HOOK =================
+  //! TODO: ================== CUSTOM HOOK =================
+  //! TODO: ================== CUSTOM HOOK =================
 
   const [langList, setLangList] = useState([]);
   let fetchLang = []; // Pushing the language from fetchData
@@ -263,6 +272,9 @@ const NewIdea = () => {
                 className="d-flex flex-column justify-content-between"
               >
                 {/* //* ======================== TAGS ======================== */}
+                {/* //! TODO: =================== FACTORIZE ================== */}
+                {/* //! TODO: =================== FACTORIZE ================== */}
+                {/* //! TODO: =================== FACTORIZE ================== */}
 
                 <div className="mb-3 p-3">
                   <ButtonInputLabel
@@ -310,6 +322,9 @@ const NewIdea = () => {
                 </div>
 
                 {/* //* ======================= ACCESS ======================= */}
+                {/* //! TODO: =================== FACTORIZE ================== */}
+                {/* //! TODO: =================== FACTORIZE ================== */}
+                {/* //! TODO: =================== FACTORIZE ================== */}
 
                 <div className="mb-3 p-3">
                   <ButtonInputLabel
@@ -368,6 +383,9 @@ const NewIdea = () => {
                 </div>
 
                 {/* //* ====================== LANGUAGE ====================== */}
+                {/* //! TODO: =================== FACTORIZE ================== */}
+                {/* //! TODO: =================== FACTORIZE ================== */}
+                {/* //! TODO: =================== FACTORIZE ================== */}
 
                 <div className="mb-3 p-3">
                   <ButtonInputLabel

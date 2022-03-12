@@ -23,14 +23,18 @@ import { BadgePill } from "./FormInput";
 import TableBody from "./TableBody";
 
 const randomGreetings = [
-  "Coucou",
   "Bonjour",
-  "Salut",
-  "Aloha",
   "Hello",
-  "Sayonara",
-  "Holà",
-  "Witam",
+  "Ciao",
+  "Hola",
+  "Olà ",
+  "Aloha",
+  "Kaliméra",
+  "សួស្តី",
+  "你好",
+  "नमस्कार ",
+  "こんにちは",
+  "안녕하세요",
 ];
 
 const randomEmoji = [
@@ -166,8 +170,8 @@ const IdeaList = ({ ideaId }) => {
         <Col>
           {/* //* =================== HEADER PART =================== */}
           <Col
-            className="d-flex flex-column align-items-center py-5 rounded"
-            style={{ backgroundColor: "#4749f450", marginTop: "7em" }}
+            className="d-flex flex-column align-items-center py-4 rounded"
+            style={{ backgroundColor: "#4749f450", marginTop: "6em" }}
           >
             <img src={logo} alt="" width={150} />
             <h3
@@ -183,7 +187,7 @@ const IdeaList = ({ ideaId }) => {
           </Col>
           {/* //* =================== SEARCH PART =================== */}
           <Row
-            className="mt-1 p-5 text-center"
+            className="mt-1 p-4 text-center"
             style={{ backgroundColor: "#4749f440" }}
           >
             <Col xs={1} />
@@ -216,10 +220,11 @@ const IdeaList = ({ ideaId }) => {
             </Col>
             <Col xs={1} />
           </Row>
+
           {/* //* =================== BADGES PART =================== */}
 
           <Row
-            className="mt-1 mb-1 p-5 text-center"
+            className="mt-1 mb-1 p-4 text-center"
             style={{ backgroundColor: "#4749f430" }}
           >
             <Col />
@@ -290,6 +295,7 @@ const IdeaList = ({ ideaId }) => {
               {search.length >= 1 &&
                 searchResult.map((result, index) => (
                   <TableBody
+                    key={index}
                     value={result}
                     index={index}
                     onClick={() => ideaId(result._id)}
@@ -299,6 +305,7 @@ const IdeaList = ({ ideaId }) => {
               {!search.length > 0 &&
                 ideas.map((idea, index) => (
                   <TableBody
+                    key={index}
                     value={idea}
                     index={index}
                     onClick={() => ideaId(idea._id)}
