@@ -41,13 +41,21 @@ const Login = () => {
 
   return (
     <div className="container d-flex flex-column align-items-center pt-5 mt-5">
-      <img src={logo} alt="Les Petites Idées" height={200} />
+      <img
+        src={logo}
+        alt="Les Petites Idées"
+        height={200}
+        style={{
+          userSelect: "none",
+        }}
+      />
       <p
         className="mb-4 py-1 px-2 rounded"
         style={{
           backgroundColor: "#04047c",
           color: "#f2d347",
           fontStyle: "italic",
+          userSelect: "none",
         }}
       >
         Backoffice

@@ -110,7 +110,7 @@ export const BadgePill = ({ value, bg, onClick }) => {
       pill
       bg={bg}
       onClick={onClick}
-      style={{ cursor: "pointer", margin: "2px" }}
+      style={{ cursor: "pointer", margin: "2px", userSelect: "none" }}
     >
       {value.toUpperCase()}
     </Badge>

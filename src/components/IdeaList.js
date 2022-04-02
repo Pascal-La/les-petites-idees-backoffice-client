@@ -171,7 +171,11 @@ const IdeaList = ({ ideaId }) => {
           {/* //* =================== HEADER PART =================== */}
           <Col
             className="d-flex flex-column align-items-center py-4 rounded"
-            style={{ backgroundColor: "#4749f450", marginTop: "6em" }}
+            style={{
+              backgroundColor: "#4749f450",
+              marginTop: "6em",
+              userSelect: "none",
+            }}
           >
             <img src={logo} alt="" width={150} />
             <h3
@@ -180,6 +184,7 @@ const IdeaList = ({ ideaId }) => {
                 backgroundColor: "#04047cdd",
                 color: "#f2d347",
                 fontStyle: "italic",
+                userSelect: "none",
               }}
             >
               {user && `${greeting}, ${user.firstname}`} {emoji}
@@ -225,7 +230,7 @@ const IdeaList = ({ ideaId }) => {
 
           <Row
             className="mt-1 mb-1 p-4 text-center"
-            style={{ backgroundColor: "#4749f430" }}
+            style={{ backgroundColor: "#4749f430", userSelect: "none" }}
           >
             <Col />
             <Col xs={12} md={6} className="text-start">

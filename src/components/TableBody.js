@@ -2,7 +2,7 @@ import React from "react";
 import { Badge, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const TableBody = ({value, index, onClick}) => {
+const TableBody = ({ value, index, onClick }) => {
   return (
     <tbody key={index}>
       <tr>
@@ -26,21 +26,21 @@ const TableBody = ({value, index, onClick}) => {
         <td>{value.description}</td>
         <td>
           {value.tags.map((tag) => (
-            <Badge key={tag} pill bg="success">
+            <Badge key={tag} style={{ userSelect: "none" }} pill bg="success">
               {tag.toUpperCase()}
             </Badge>
           ))}
         </td>
         <td>
           {value.access.map((access) => (
-            <Badge key={access} pill>
+            <Badge key={access} style={{ userSelect: "none" }} pill>
               {access.toUpperCase()}
             </Badge>
           ))}
         </td>
         <td>
           {value.language.map((lang) => (
-            <Badge key={lang} pill bg="danger">
+            <Badge key={lang} style={{ userSelect: "none" }} pill bg="danger">
               {lang.toUpperCase()}
             </Badge>
           ))}
