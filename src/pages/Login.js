@@ -12,6 +12,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState("");
 
   const signIn = async (e) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ const Login = () => {
       window.location.href = "/";
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      setErrors(error.response.data);
     }
   };
 
@@ -60,6 +61,7 @@ const Login = () => {
               placeholder="Adresse email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onFocus={() => setErrors("")}
             />
           </Form.Group>
 
@@ -70,14 +72,22 @@ const Login = () => {
               placeholder="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setErrors("")}
             />
           </Form.Group>
-          <div className="d-grid gap-2">
-            <Button type="submit" variant="warning" className="mt-3">
-              {loading ? <Spinner animation="border" size="sm" /> : "Valider"}
-            </Button>
-          </div>
+          {!errors && (
+            <div className="d-grid gap-2">
+              <Button type="submit" variant="warning" className="mt-3">
+                {loading ? <Spinner animation="border" size="sm" /> : "Valider"}
+              </Button>
+            </div>
+          )}
         </Form>
+        {errors && (
+          <div className="bg-danger text-center rounded mt-3 p-2">
+            <p>{errors}</p>
+          </div>
+        )}
       </Col>
     </div>
   );
